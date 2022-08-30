@@ -5,9 +5,16 @@ BeginPackage["Graphics`"]
 
 ParametricLine::usage = "Draw a line with n connected dots";
 ComplexCircle::usage = "Draw a cicle defined by center and radius on the complex plane";
+ComplexPoint::usage = "Graphics object of a complex number";
+ComplexLineAB::usage = "Graphics object of a line defined by two complex numbers";
+ComplexLinePF::usage = "Graphics object of a line defined by a complex number as the basepoint, an angle in radian and a length";
+ComplexTriangle::usage = "Graphics object of a triangle defined by three complex numbers"
+ComplexParallelogram::usage = "Graphics object of a parallelogram defined by three complex numbers: basepoint, direction 1 and direction 2";
+ComplexGrid::usage = "Graphics object of a grid defined analogous to a ComplexParallelogram";
+ComplexGridWithColor::usage = "Graphics object of a grid given by ComplexGrid with parallel lines colored accordingly";
 
 Begin["`Private`"] (* Begin Private Context *) 
-Needs["ShkyMath`"];
+Needs["ShkyMath`","Math.wl"];
 (*Geometric Objects*)
 
 (*Points*)

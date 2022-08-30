@@ -7,10 +7,11 @@ GenerationGetSimpleSchottkyGroup::usage = "Obtain a simple cover by using circle
 BranchCutGetFixedPoints::usage = "Get fixed point of a given schottky generator";
 GraphicsDisplayCover::usage = "Get graphics element of a schottky cover";
 GraphicsGetGraphicsRange::usage = "Get the real plot range given a Schottky cover";
+BranchCutGetLogMap::usage = "Get the ComplexLogarithm function with branch cut along a logarithmic spirad defined by q";
 
 Begin["`Private`"] (* Begin Private Context *) 
 Needs["ShkyMath`","setup/Math.wl"];
-Needs["Graphics`","setup/Math.wl"];
+Needs["Graphics`","setup/Visual.wl"];
 
 MobiusMatrixToTransformation[{{a_, b_}, {c_, d_}}] := Module[{f},
   f[z_] := (a z + b)/(c z + d);
@@ -363,16 +364,7 @@ BranchCutDisplayNormalizedBCycleCurveList[C_, N_,
 
 (*Logarithms and Branch Cuts*)
 
-BranchCutGetLogMap[q_, b_ : 1] := Module[{c, tr, re, BelowBranch, f},
-  c[t_] := b ComplexPower[q, t];
-  tr[p_] := Log[Abs[p/b]]/Log[Abs[q]];
-  BelowBranch[p_] := ComplexAngle[p] <= ComplexAngle[c[tr[p]]];
-  
-  f[z_] := If[BelowBranch[z], ComplexLogarithm[z] + 1, ComplexLogarithm[z]];
-  Return[f];
-  ]
-
-BranchCutGetLogMapToFundamentalStrip[q_] := 
+BranchCutGetLogMap[q_] := 
  Module[{\[Tau] = ComplexLogarithm[q], f},
   f[z_] := 
    With[{l = LatticeGetLatticeRepresentation[ComplexLogarithm[z], \[Tau]]}, 
