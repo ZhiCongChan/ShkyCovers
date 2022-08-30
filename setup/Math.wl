@@ -12,6 +12,7 @@ MapCircle::usage = "Map a circle defined by center and radius";
 LinearInterpolation::usage = "Gives the linear interpolation of between two points";
 e::usage = "e^(2pi i  z)";
 ComplexPower::usage = "Exponential with different branch";
+ComplexLogarith::usage = "1/2pi i Log with branch chosen in a way that the image is contained in [0,1]";
 
 
 Begin["`Private`"] (* Begin Private Context *) 
@@ -116,21 +117,21 @@ OddGrid[n_] := Module[{ret},
 
 (*2D Coordinate Transformations*)
 
-Lattice`GridPointToComplex[{s_, t_}, {b_, w1_, w2_}] := b + s w1 + t w2;
+LatticeGridPointToComplex[{s_, t_}, {b_, w1_, w2_}] := b + s w1 + t w2;
 ComplexToLatticeCoord[z_, \[Tau]_] := {z - (Im[z]/Im[\[Tau]]) \[Tau], 
    Im[z]/Im[\[Tau]]};
 
-Lattice`GetLatticeRepresentation[z_, \[Tau]_] := Module[{n, m, Imz0},
+LatticeGetLatticeRepresentation[z_, \[Tau]_] := Module[{n, m, Imz0},
   n = Floor[Im[z]/Im[\[Tau]]];
   Imz0 = Im[z] - n Im[\[Tau]];
   m = Floor[Re[z] - n Re[\[Tau]] - Re[\[Tau]]/Im[\[Tau]] Imz0];
   Return[{z - m - n \[Tau], m, n}];
   ]
 
-Lattice`GetFundamentalPoint[z_, \[Tau]_] := 
-  Lattice`GetLatticeRepresentation[z, \[Tau]][[1]];
-Lattice`GetLatticePosition[z_, \[Tau]_] := 
-  With[{l = Lattice`GetLatticeRepresentation[z, \[Tau]][[2]]},
+LatticeGetFundamentalPoint[z_, \[Tau]_] := 
+  LatticeGetLatticeRepresentation[z, \[Tau]][[1]];
+LatticeGetLatticePosition[z_, \[Tau]_] := 
+  With[{l = LatticeGetLatticeRepresentation[z, \[Tau]][[2]]},
    Return[{l[[2]], l[[3]]}];
    ];
 
