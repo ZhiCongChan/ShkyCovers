@@ -11,7 +11,7 @@ BranchCutGetLogMap::usage = "Get the ComplexLogarithm function with branch cut a
 BranchCutGetNormalizedBCycleCurveList::usage = "Get a list of functions parameterizing the loxodromes corresponding to each generator of a Schottky group";
 BranchCutDisplayNormalizedBCycleCurveList::usage = "Get a list graphical objects corresponding to the loxodromes corresponding to each generator of a Schottky group";
 Transformation::TransformCirclePairFromPSL::usage = "Transform a Schottky cover by a mobius transformation given its matrix representation";
-
+GroupGetAllMaps::usage = "Get a maps up to a certain word length of a Schottky cover";
 
 
 Begin["`Private`"] (* Begin Private Context *) 
