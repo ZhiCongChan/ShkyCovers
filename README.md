@@ -1,2 +1,2 @@
 # ShkyCovers
-A Mathematica Package for generating, working and visualizing classical Schottky Covers.
+A Mathematica Package for generating and visualizing classical Schottky covers.
