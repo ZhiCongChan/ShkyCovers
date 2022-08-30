@@ -8,6 +8,11 @@ BranchCutGetFixedPoints::usage = "Get fixed point of a given schottky generator"
 GraphicsDisplayCover::usage = "Get graphics element of a schottky cover";
 GraphicsGetGraphicsRange::usage = "Get the real plot range given a Schottky cover";
 BranchCutGetLogMap::usage = "Get the ComplexLogarithm function with branch cut along a logarithmic spirad defined by q";
+BranchCutGetNormalizedBCycleCurveList::usage = "Get a list of functions parameterizing the loxodromes corresponding to each generator of a Schottky group";
+BranchCutDisplayNormalizedBCycleCurveList::usage = "Get a list graphical objects corresponding to the loxodromes corresponding to each generator of a Schottky group";
+Transformation::TransformCirclePairFromPSL::usage = "Transform a Schottky cover by a mobius transformation given its matrix representation";
+
+
 
 Begin["`Private`"] (* Begin Private Context *) 
 Needs["ShkyMath`","setup/Math.wl"];
