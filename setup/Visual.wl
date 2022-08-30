@@ -4,6 +4,7 @@ BeginPackage["Graphics`"]
 (* Exported symbols added here with SymbolName::usage *)  
 
 ParametricLine::usage = "Draw a line with n connected dots";
+ComplexCircle::usage = "Draw a cicle defined by center and radius on the complex plane";
 
 Begin["`Private`"] (* Begin Private Context *) 
 Needs["ShkyMath`"];

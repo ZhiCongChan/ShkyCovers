@@ -1,10 +1,16 @@
 (* Wolfram Language Package *)
 BeginPackage["Schottky`"]
 (* Exported symbols added here with SymbolName::usage *)  
+
+IOGetQ::usage = "get q parameter";
 GenerationGetSimpleSchottkyGroup::usage = "Obtain a simple cover by using circle pairs";
+BranchCutGetFixedPoints::usage = "Get fixed point of a given schottky generator";
+GraphicsDisplayCover::usage = "Get graphics element of a schottky cover";
+GraphicsGetGraphicsRange::usage = "Get the real plot range given a Schottky cover";
 
 Begin["`Private`"] (* Begin Private Context *) 
 Needs["ShkyMath`","setup/Math.wl"];
+Needs["Graphics`","setup/Math.wl"];
 
 MobiusMatrixToTransformation[{{a_, b_}, {c_, d_}}] := Module[{f},
   f[z_] := (a z + b)/(c z + d);
@@ -218,15 +224,15 @@ GraphicsDisplayCover[circpairs_, n_] :=
   
 (*Transforming Covers*)
 
-Transformation`TransformCirclePairFromPSL[{{p1_, r1_}, {p2_, r2_}, 
+TransformationTransformCirclePairFromPSL[{{p1_, r1_}, {p2_, r2_}, 
    M_}, A_] := Module[
   {c1, c2},
   c1 = MobiusTranformCircleFromMatrix[{p1, r1}, A];
   c2 = MobiusTranformCircleFromMatrix[{p2, r2}, A];
   Return[{c1, c2, A . M . Inverse[A]}]
   ]
-Transformation`TransformCoverFromPSL[C_, A_] := 
-  Transformation`TransformCirclePairFromPSL[#, A] & /@ C;
+TransformationTransformCoverFromPSL[C_, A_] := 
+  TransformationTransformCirclePairFromPSL[#, A] & /@ C;
 
 (*Canonical B-Cycle*)
 
@@ -280,7 +286,7 @@ BranchCutGetBCycleCurve[{c1_, c2_, M_}, OptionsPattern[]] := Module[{
    A = BranchCutGetFixedPointInversionMatrix[{c1, c2, M}, 
      OptionValue["\[Lambda]"]],
    c, p, q, \[Gamma]},
-  c = Transformation`TransformCirclePairFromPSL[{c1, c2, M}, A];
+  c = TransformationTransformCirclePairFromPSL[{c1, c2, M}, A];
   q = c[[3, 1, 1]]/c[[3, 2, 2]];
   p = c[[1, 1]] + e[OptionValue["\[Phi]"]] c[[1, 2]];
   \[Gamma][t_] := 
@@ -315,7 +321,7 @@ BranchCutGetNormalizedBCycleCurve[{c1_, c2_, M_},
    Module[{
      A = BranchCutGetFixedPointInversionMatrix[{c1, c2, M}],
      c, p, q, \[Gamma]},
-    c = Transformation`TransformCirclePairFromPSL[{c1, c2, M}, A];
+    c = TransformationTransformCirclePairFromPSL[{c1, c2, M}, A];
     q = c[[3, 1, 1]]/c[[3, 2, 2]];
     p = c[[1, 1]] + e[OptionValue["\[Phi]"]] c[[1, 2]];
     \[Gamma][t_] := 
@@ -369,7 +375,7 @@ BranchCutGetLogMap[q_, b_ : 1] := Module[{c, tr, re, BelowBranch, f},
 BranchCutGetLogMapToFundamentalStrip[q_] := 
  Module[{\[Tau] = ComplexLogarithm[q], f},
   f[z_] := 
-   With[{l = Lattice`GetLatticeRepresentation[ComplexLogarithm[z], \[Tau]]}, 
+   With[{l = LatticeGetLatticeRepresentation[ComplexLogarithm[z], \[Tau]]}, 
     l[[1]] + l[[3]] \[Tau]];
   Return[f];
   ]
