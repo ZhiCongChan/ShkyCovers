@@ -193,33 +193,38 @@ GroupGetAllMaps[circpairs_, n_] :=
 
 GraphicsGetComplexRange[circpairs_, feather_:0.2] :=
   Module[{values, rmin, rmax, imin, imax},
-    values = Flatten[{circpairs[[#[[1]]]][[#[[2]]]][[1]] + circpairs[[
-      #[[1]]]][[#[[2]]]][[2]], circpairs[[#[[1]]]][[#[[2]]]][[1]] + I circpairs
-      [[#[[1]]]][[#[[2]]]][[2]], circpairs[[#[[1]]]][[#[[2]]]][[1]] - circpairs
-      [[#[[1]]]][[#[[2]]]][[2]], circpairs[[#[[1]]]][[#[[2]]]][[1]] - I circpairs
-      [[#[[1]]]][[#[[2]]]][[2]]}& /@ ListProduct[Table[n, {n, 1, Length[circpairs
-      ]}], {1, 2}]];
+    values = Flatten[{
+        circpairs[[#[[1]]]][[#[[2]]]][[1]] + circpairs[[#[[1]]]][[#[[2]]]][[2]], 
+        circpairs[[#[[1]]]][[#[[2]]]][[1]] + I circpairs[[#[[1]]]][[#[[2]]]][[2]], 
+        circpairs[[#[[1]]]][[#[[2]]]][[1]] - circpairs[[#[[1]]]][[#[[2]]]][[2]], 
+        circpairs[[#[[1]]]][[#[[2]]]][[1]] - I circpairs[[#[[1]]]][[#[[2]]]][[2]]
+      }& /@ ListProduct[Table[n, {n, 1, Length[circpairs]}], {1, 2}]
+    ];
+
     rmin = Min[Re[values]] - feather;
     rmax = Max[Re[values]] + feather;
     imin = Min[Im[values]] - feather;
     imax = Max[Im[values]] + feather;
+
     Return[{{rmin + I imin}, {rmax + I imax}}];
   ]
 
 GraphicsGetGraphicsRange[circpairs_, feather_:0.2] :=
   Module[{values, rmin, rmax, imin, imax},
-    values = Flatten[{circpairs[[#[[1]]]][[#[[2]]]][[1]] + circpairs[[
-      #[[1]]]][[#[[2]]]][[2]], circpairs[[#[[1]]]][[#[[2]]]][[1]] + I circpairs
-      [[#[[1]]]][[#[[2]]]][[2]], circpairs[[#[[1]]]][[#[[2]]]][[1]] - circpairs
-      [[#[[1]]]][[#[[2]]]][[2]], circpairs[[#[[1]]]][[#[[2]]]][[1]] - I circpairs
-      [[#[[1]]]][[#[[2]]]][[2]]}& /@ ListProduct[Table[n, {n, 1, Length[circpairs
-      ]}], {1, 2}]];
+    values = Flatten[{
+        circpairs[[#[[1]]]][[#[[2]]]][[1]] + circpairs[[#[[1]]]][[#[[2]]]][[2]], 
+        circpairs[[#[[1]]]][[#[[2]]]][[1]] + I circpairs[[#[[1]]]][[#[[2]]]][[2]], 
+        circpairs[[#[[1]]]][[#[[2]]]][[1]] - circpairs[[#[[1]]]][[#[[2]]]][[2]], 
+        circpairs[[#[[1]]]][[#[[2]]]][[1]] - I circpairs[[#[[1]]]][[#[[2]]]][[2]]
+      }&/@ ListProduct[Table[n, {n, 1, Length[circpairs]}], {1, 2}]
+    ];
+
     rmin = Min[Re[values]] - feather;
     rmax = Max[Re[values]] + feather;
     imin = Min[Im[values]] - feather;
     imax = Max[Im[values]] + feather;
+
     Return[ApplySquarificationOfRange[{{rmin, rmax}, {imin, imax}}]];
-      
   ]
 
 (*Display Cover*)
@@ -330,8 +335,10 @@ BranchCutGetBCycleIntersectionPoints[C_, OptionsPattern[]] :=
     Return[Flatten[{\[Gamma][0], \[Gamma][1]}]];
   ]
 
-Options[BranchCutGetNormalizedBCycleCurve] = {"\[Phi]" -> 0, "range" 
-  -> {0, 1}};
+Options[BranchCutGetNormalizedBCycleCurve] = {
+  "\[Phi]" -> 0, 
+  "range" -> {0, 1}
+};
 
 BranchCutGetNormalizedBCycleCurve[{c1_, c2_, M_}, OptionsPattern[]] :=
   If[(c1[[1]] == 0) && (c2[[1]] == 0),
@@ -351,27 +358,34 @@ BranchCutGetNormalizedBCycleCurve[{c1_, c2_, M_}, OptionsPattern[]] :=
 
 (*Get List of B Cycles*)
 
-Options[BranchCutGetNormalizedBCycleCurveList] = {"\[Phi]" -> {}, "range"
-   -> {0, 1}};
+Options[BranchCutGetNormalizedBCycleCurveList] = {
+  "\[Phi]" -> {}, 
+  "range"-> {0, 1}
+};
 
 BranchCutGetNormalizedBCycleCurveList[C_, OptionsPattern[]] :=
   If[Length[OptionValue["\[Phi]"]] == Length[C],
-    Return[BranchCutGetNormalizedBCycleCurve[#[[1]], "\[Phi]" -> #[[2
-      ]], "range" -> OptionValue["range"]]& /@ Pair[C, OptionValue["\[Phi]"
-      ]]]
-    ,
+    Return[BranchCutGetNormalizedBCycleCurve[
+      #[[1]], 
+      "\[Phi]" -> #[[2]], 
+      "range" -> OptionValue["range"]]&/@ Pair[C, OptionValue["\[Phi]"]]
+    ],
     Return[BranchCutGetNormalizedBCycleCurve[#, "range" -> OptionValue[
       "range"]]& /@ C];
   ]
 
 (*Display All B Cycles*)
 
-Options[BranchCutDisplayNormalizedBCycleCurveList] = {"\[Phi]" -> {},
-   "range" -> {0, 1}};
+Options[BranchCutDisplayNormalizedBCycleCurveList] = {
+  "\[Phi]" -> {},
+  "range" -> {0, 1}
+};
 
 BranchCutDisplayNormalizedBCycleCurveList[C_, N_, OptionsPattern[]] :=
-  ParametricLine[#, N]& /@ BranchCutGetNormalizedBCycleCurveList[C, "\[Phi]"
-     -> OptionValue["\[Phi]"], "range" -> OptionValue["range"]];
+  ParametricLine[#, N]&/@ BranchCutGetNormalizedBCycleCurveList[
+    C, 
+    "\[Phi]" -> OptionValue["\[Phi]"], "range" -> OptionValue["range"]
+  ];
 
 (*Logarithms and Branch Cuts*)
 
