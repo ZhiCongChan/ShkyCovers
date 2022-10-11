@@ -6,6 +6,8 @@ BeginPackage["Schottky`"]
 
 IOGetQ::usage = "get q parameter";
 
+GenerationGetSimpleGeneratorMap::usage = "Obtain a Schottky genenrator map given a pair of circles and an optional phase"
+
 GenerationGetSimpleSchottkyGroup::usage = "Obtain a simple cover by using circle pairs";
 
 BranchCutGetFixedPoints::usage = "Get fixed point of a given schottky generator";
@@ -20,15 +22,11 @@ BranchCutGetNormalizedBCycleCurveList::usage = "Get a list of functions paramete
 
 BranchCutDisplayNormalizedBCycleCurveList::usage = "Get a list graphical objects corresponding to the loxodromes corresponding to each generator of a Schottky group";
 
-TransformCirclePairFromPSL::usage = "Transform a Schottky cover by a mobius transformation given its matrix representation";
+TransformCirclePairFromPSL::usage = "Transform a Schottky generator by a mobius transformation given its matrix representation";
+
+TransformCoverFromPSL::usage = "Transforms a Schottky cover given a PSL matrix"
 
 GroupGetAllMaps::usage = "Get a maps up to a certain word length of a Schottky cover";
-
-MobiusTransformationToMatrix::usage = "Returns the matrix corresponding to a mobius transformation given the image of the points {0,1,i}";
-
-GenerationGetSimpleGeneratorMatrix::usage = "Obtain a Schottky generator given a pair of circles. An optional third parameter modifies the mapping angle of the map"
-
-GenerationGetSimpleGeneratorMap::usage = "Obtain a Schottky generator map given a pair of circles. An optional third parameter modifies the mapping angle of the map"
 
 Begin["`Private`"](* Begin Private Context *)
 
@@ -41,26 +39,6 @@ MobiusMatrixToTransformation[{{a_, b_}, {c_, d_}}] :=
     f[z_] := (a z + b) / (c z + d);
     Return[f];
   ]
-
-MobiusMatrixToTransformationDer[{{a_, b_}, {c_, d_}}] :=
-  Module[{f},
-    f[z_] := a / (c z + d) - c (a z + b) / (c z + d) ^ 2;
-    Return[f];
-  ]
-
-MobiusMatrixImageInf[{{a_, b_}, {c_, d_}}] :=
-  If[c == 0,
-    Return[\[Infinity]]
-    ,
-    Return[a / c]
-  ];
-
-MobiusMatrixPreImageInf[{{a_, b_}, {c_, d_}}] :=
-  If[c == 0,
-    Return[\[Infinity]]
-    ,
-    Return[-d / c]
-  ];
 
 MobiusFixedPoint[{{a_, b_}, {c_, d_}}] :=
   Module[{term1, term2},
@@ -99,23 +77,6 @@ MobiusTranformCircleFromMatrix[{p_, r_}, {{a_, b_}, {c_, d_}}] :=
       {p0, p1, \[Phi]} = MobiusMatrixToCircle[A];
       Return[{\[Phi] Conjugate[(p - p0) / (Abs[p - p0] ^ 2 - r^2)] + 
         p1, Abs[(\[Phi] r) / (Abs[p - p0] ^ 2 - r^2)]}];
-    ]
-  ]
-
-MobiusCircleIsInvertedFromMatrix[{p_, r_}, {{a_, b_}, {c_, d_}}] :=
-  Module[{p0, p1, \[Phi]},
-    If[c == 0,
-      Return[False]
-    ];
-    With[{A = {{a, b}, {c, d}}},
-      {p0, p1, \[Phi]} = MobiusMatrixToCircle[A];
-      Return[
-        If[Abs[p - p0] < r,
-          True
-          ,
-          False
-        ]
-      ];
     ]
   ]
 
@@ -177,12 +138,9 @@ corresponding to a Moebius Transformation that maps the exterior of D to the int
  Given D and D', we generate one such element
 *)
 
-GenerationIsInner[{p1_, r1_}, {p2_, r2_}] :=
-  (Abs[p1 - p2] > r1) && (Abs[p1 - p2] > r2);
-
 GenerationGetSimpleGeneratorMatrix[{p1_, r1_}, {p2_, r2_}, \[Phi]_:0] :=
   Module[{A, inner},
-    inner = GenerationIsInner[{p1,r1},{p2,r2}];
+    inner = (Abs[p1 - p2] > r1) && (Abs[p1 - p2] > r2);
     If[inner,
       A = {{p2, e[\[Phi]] r1 r2 - p1 p2}, {1, -p1}}
       ,
@@ -293,16 +251,15 @@ GraphicsDisplayCover[circpairs_, n_] :=
 
 (*Transforming Covers*)
 
-TransformationTransformCirclePairFromPSL[{{p1_, r1_}, {p2_, r2_}, M_},
-   A_] :=
+TransformCirclePairFromPSL[{{p1_, r1_}, {p2_, r2_}, M_}, A_] :=
   Module[{c1, c2},
     c1 = MobiusTranformCircleFromMatrix[{p1, r1}, A];
     c2 = MobiusTranformCircleFromMatrix[{p2, r2}, A];
     Return[{c1, c2, A . M . Inverse[A]}]
   ]
 
-TransformationTransformCoverFromPSL[C_, A_] :=
-  TransformationTransformCirclePairFromPSL[#, A]& /@ C;
+TransformCoverFromPSL[C_, A_] :=
+  TransformCirclePairFromPSL[#, A]& /@ C;
 
 (*Canonical B-Cycle*)
 
