@@ -4,7 +4,11 @@ BeginPackage["Schottky`"]
 
 (* Exported symbols added here with SymbolName::usage *)
 
+MobiusTransformationToMatrix::usage = "Get the matrix corresponding to a mobius transformation";
+
 IOGetQ::usage = "get q parameter";
+
+GenerationGetSimpleGeneratorMatrix::usage = "Obtain Schottky generator matrix given a pair of circles and optional phase"
 
 GenerationGetSimpleGeneratorMap::usage = "Obtain a Schottky genenrator map given a pair of circles and an optional phase"
 
@@ -318,7 +322,7 @@ Options[BranchCutGetBCycleCurve] = {"\[Lambda]" -> 1, "\[Phi]" -> 0,
 BranchCutGetBCycleCurve[{c1_, c2_, M_}, OptionsPattern[]] :=
   Module[{A = BranchCutGetFixedPointInversionMatrix[{c1, c2, M}, OptionValue[
     "\[Lambda]"]], c, p, q, \[Gamma]},
-    c = TransformationTransformCirclePairFromPSL[{c1, c2, M}, A];
+    c = TransformCirclePairFromPSL[{c1, c2, M}, A];
     q = c[[3, 1, 1]] / c[[3, 2, 2]];
     p = c[[1, 1]] + e[OptionValue["\[Phi]"]] c[[1, 2]];
     \[Gamma][t_] := p ComplexPower[q, OptionValue["range"][[1]] (1 - 
@@ -347,13 +351,16 @@ BranchCutGetNormalizedBCycleCurve[{c1_, c2_, M_}, OptionsPattern[]] :=
     Return[BranchCutGetConcentricBCycleCurve[{c1, c2, M}, "range" -> 
       OptionValue["range"], "\[Phi]" -> OptionValue["\[Phi]"]]]
     ,
-    Module[{A = BranchCutGetFixedPointInversionMatrix[{c1, c2, M}], c,
-       p, q, \[Gamma]},
-      c = TransformationTransformCirclePairFromPSL[{c1, c2, M}, A];
+    Module[{
+        A = BranchCutGetFixedPointInversionMatrix[{c1, c2, M}], 
+        c,p, q, \[Gamma]
+      },
+
+      c = TransformCirclePairFromPSL[{c1, c2, M}, A];
       q = c[[3, 1, 1]] / c[[3, 2, 2]];
       p = c[[1, 1]] + e[OptionValue["\[Phi]"]] c[[1, 2]];
-      \[Gamma][t_] := p ComplexPower[q, OptionValue["range"][[1]] (1 
-        - t) + OptionValue["range"][[2]] t];
+      \[Gamma][t_] := p ComplexPower[q, OptionValue["range"][[1]] (1-t) + OptionValue["range"][[2]] t];
+
       Return[MobiusMatrixToTransformation[Inverse[A]] @* \[Gamma]];
     ]
   ];
@@ -400,7 +407,7 @@ BranchCutGetLogMap[q_] :=
       With[{
         l = LatticeGetLatticeRepresentation[ComplexLogarithm[z], 
         \[Tau]]},
-        
+
         l[[1]] + l[[3]] \[Tau]
       ];
     Return[f];
