@@ -326,8 +326,10 @@ BranchCutGetBCycleCurve[{c1_, c2_, M_}, OptionsPattern[]] :=
     Return[MobiusMatrixToTransformation[Inverse[A]] @* \[Gamma]];
   ]
 
-Options[BranchCutGetBCycleIntersectionPoints] = {"\[Lambda]" -> 1, "\[Phi]"
-   -> 0};
+Options[BranchCutGetBCycleIntersectionPoints] = {
+  "\[Lambda]" -> 1, 
+  "\[Phi]" -> 0
+};
 
 BranchCutGetBCycleIntersectionPoints[C_, OptionsPattern[]] :=
   With[{\[Gamma] = BranchCutGetBCycleCurve[C, "\[Lambda]" -> OptionValue[
@@ -370,8 +372,10 @@ BranchCutGetNormalizedBCycleCurveList[C_, OptionsPattern[]] :=
       "\[Phi]" -> #[[2]], 
       "range" -> OptionValue["range"]]&/@ Pair[C, OptionValue["\[Phi]"]]
     ],
-    Return[BranchCutGetNormalizedBCycleCurve[#, "range" -> OptionValue[
-      "range"]]& /@ C];
+    Return[BranchCutGetNormalizedBCycleCurve[
+      #,
+      "range" -> OptionValue["range"]]& /@ C
+    ];
   ]
 
 (*Display All B Cycles*)
@@ -384,7 +388,8 @@ Options[BranchCutDisplayNormalizedBCycleCurveList] = {
 BranchCutDisplayNormalizedBCycleCurveList[C_, N_, OptionsPattern[]] :=
   ParametricLine[#, N]&/@ BranchCutGetNormalizedBCycleCurveList[
     C, 
-    "\[Phi]" -> OptionValue["\[Phi]"], "range" -> OptionValue["range"]
+    "\[Phi]" -> OptionValue["\[Phi]"], 
+    "range" -> OptionValue["range"]
   ];
 
 (*Logarithms and Branch Cuts*)
@@ -392,8 +397,10 @@ BranchCutDisplayNormalizedBCycleCurveList[C_, N_, OptionsPattern[]] :=
 BranchCutGetLogMap[q_] :=
   Module[{\[Tau] = ComplexLogarithm[q], f},
     f[z_] :=
-      With[{l = LatticeGetLatticeRepresentation[ComplexLogarithm[z], 
+      With[{
+        l = LatticeGetLatticeRepresentation[ComplexLogarithm[z], 
         \[Tau]]},
+        
         l[[1]] + l[[3]] \[Tau]
       ];
     Return[f];
